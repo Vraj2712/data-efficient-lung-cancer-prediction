@@ -1,0 +1,9 @@
+age,pack_years,cig_years,cigpd_f,cig_stop,bmi_curr,lung_cancer,sex_2,race7_2,race7_3,race7_4,race7_5,race7_6,race7_7,educat_2.0,educat_3.0,educat_4.0,educat_5.0,educat_6.0,educat_7.0,cig_stat_1.0,cig_stat_2.0,rsmoker_f_1.0,emphys_f_1.0,bronchit_f_1.0,lung_fh_1.0,lung_fh_9.0
+60,15.0,20.0,10.0,5.0,26.3,0,True,True,False,False,False,False,False,False,True,False,False,False,False,True,False,False,False,False,False,True
+72,40.0,45.0,20.0,2.0,24.8,1,True,False,True,False,False,False,False,True,False,False,False,False,False,False,True,True,True,False,True,False
+55,0.0,0.0,0.0,0.0,29.4,0,False,False,False,True,False,False,False,False,False,True,False,False,False,False,False,False,False,True,False,True
+68,35.0,40.0,15.0,4.0,23.1,1,True,False,False,False,True,False,False,False,True,False,False,False,False,False,True,True,True,True,False,False
+50,5.0,10.0,5.0,2.0,31.2,0,False,False,False,False,False,True,False,False,False,False,False,True,False,True,False,False,False,False,False,True
+64,50.0,46.0,25.0,1.0,27.5,1,True,False,False,False,False,False,True,False,False,False,False,False,True,False,True,True,False,True,True,False
+58,12.0,18.0,8.0,7.0,28.0,0,False,False,True,False,False,False,False,False,False,False,True,False,False,True,False,False,False,False,False,True
+70,30.0,35.0,15.0,10.0,22.9,1,True,True,False,False,False,False,False,False,False,True,False,False,False,False,True,True,True,True,True,False

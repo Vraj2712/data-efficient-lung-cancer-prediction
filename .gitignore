@@ -1,0 +1,29 @@
+# ---------------------------
+# Ignore REAL PLCO data files
+# ---------------------------
+data/lung_15_variable_cleaned.csv
+data/lung_data.csv
+data/plco_*.csv
+catboost_info/
+# Ignore all OTHER large/private CSVs in data
+data/*.csv
+
+# keep the synthetic demo sample
+!data/fake_plco_sample.csv
+
+# ---------------------------
+# Notebook cache folders
+# ---------------------------
+.ipynb_checkpoints
+
+# ---------------------------
+# Model and temp files
+# ---------------------------
+*.pkl
+*.sav
+*.joblib
+# ---------------------------
+# OS / editor junk
+# ---------------------------
+.DS_Store
+Thumbs.db
