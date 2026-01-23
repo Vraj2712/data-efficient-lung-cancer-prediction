@@ -82,68 +82,97 @@ This design ensures:
 
 ---
 
-## 📈 Visual Analysis
 
-### 1️⃣ Data Efficiency (Learning Curves)
+## 📈 Visual Analysis & Interpretation
 
-**AUC-ROC, AUC-PR, Recall, Precision, and F1 vs Training Fraction**
+### 1️⃣ Data Efficiency: AUC-ROC & AUC-PR
 
-![Learning Curves](figures/learning_curve_all_metrics.png)
+![Data Efficiency: AUC-ROC and AUC-PR](figures/gh_dual_aucroc_aucpr.png)
 
-**Interpretation**
+**What this plot shows**
 
-* Performance degrades **very gradually**
-* Ranking ability (AUC-ROC) remains strong even at 10% data
-* Recall remains consistently high
+This figure illustrates how the model’s **ranking performance (AUC-ROC)** and **precision–recall performance (AUC-PR)** change as the training data is progressively reduced.
 
----
+**Key observations**
 
-### 2️⃣ Dual-Metric Efficiency (AUC-ROC & AUC-PR)
-
-![Dual AUC](figures/gh_dual_aucroc_aucpr.png)
+* AUC-ROC remains **high and nearly flat** from 100% down to ~40% training data
+* Even at **10% training data**, performance drops only slightly
+* AUC-PR degrades smoothly, which is expected for highly imbalanced medical data
 
 **Interpretation**
 
-* Ranking quality remains stable
-* Precision-recall degrades smoothly, as expected for rare outcomes
+The model learns strong, generalizable patterns early and remains **highly data-efficient**, retaining reliable ranking ability even with limited data.
 
 ---
 
-### 3️⃣ Performance Degradation vs Full Data
+### 2️⃣ Performance Degradation vs Full Training Data
 
-![Performance Drop](figures/gh_drop_vs_full.png)
+![Performance Degradation](figures/gh_drop_vs_full.png)
+
+**What this plot shows**
+
+This plot measures the **absolute performance drop** of each metric compared to training on the full dataset (100%).
+
+**Key observations**
+
+* AUC-ROC drops by only **~0.005** at 10% data
+* AUC-PR and F1 decline gradually, without sharp drops
+* Recall remains consistently high across most fractions
 
 **Interpretation**
 
-* Only ~0.005 AUC-ROC loss at 10% data
-* Indicates strong data efficiency
-* No signs of overfitting
+Performance degradation is **slow and controlled**, indicating that the ensemble does not overfit and remains robust under data scarcity.
 
 ---
 
-### 4️⃣ Stability Analysis (Lower Is Better)
+### 3️⃣ Stability Across Random Seeds
 
-![Stability](figures/gh_stability_std.png)
+![Stability Across Seeds](figures/gh_stability_std.png)
+
+**What this plot shows**
+
+This figure displays the **standard deviation of metrics across 5 random seeds** for each training fraction.
+
+**Key observations**
+
+* Variance increases gradually as training data decreases
+* No instability, spikes, or metric collapse are observed
+* AUC-ROC remains the most stable metric
 
 **Interpretation**
 
-* Variance increases gradually as data decreases
-* No instability or metric collapse
-* Ensemble remains reliable under data scarcity
+The model produces **consistent and reliable results** across different random samples, demonstrating strong robustness and low sensitivity to data sampling.
 
 ---
 
-### 5️⃣ Threshold Stability
+### 4️⃣ Threshold Stability
 
 ![Threshold Stability](figures/threshold_stability.png)
 
+**What this plot shows**
+
+This plot tracks the **optimal decision threshold** (chosen via validation F1 maximization) across different training fractions.
+
+**Key observations**
+
+* Optimal threshold remains near **0.30** across all data sizes
+* Slightly higher variance at very low data fractions
+* No erratic threshold shifts
+
 **Interpretation**
 
-* Optimal decision threshold remains near ~0.30
-* Indicates stable decision boundaries
-* Strong evidence against overfitting
+The decision boundary is **stable and well-calibrated**, providing strong evidence against overfitting and supporting reliable deployment behavior.
 
 ---
+
+If you want, next I can:
+
+* **Trim this to fit a strict word limit**
+* **Highlight only the strongest plots for recruiters**
+* **Polish language for a research-style README**
+
+Just say the word 👍
+
 
 ## 🧠 Key Takeaways (Plain Language)
 
