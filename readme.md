@@ -3,25 +3,57 @@
 
 ## Data Efficiency & Stability Analysis of a Super-Stacking Ensemble
 
+<!-- 🔰 Project Badges -->
+
+<p align="center">
+
+<a href="https://www.python.org/">
+  <img src="https://img.shields.io/badge/Python-3.9%2B-blue" />
+</a>
+
+<img src="https://img.shields.io/badge/Task-Binary%20Classification-purple" />
+
+<img src="https://img.shields.io/badge/Data-Clinical%20%7C%20Tabular-orange" />
+
+<img src="https://img.shields.io/badge/Model-Super%20Stacking%20Ensemble-indigo" />
+
+<img src="https://img.shields.io/badge/Domain-Healthcare%20AI-red" />
+
+<img src="https://img.shields.io/badge/Dataset-PLCO-brightgreen" />
+
+<img src="https://img.shields.io/badge/Metrics-AUC--ROC%20%7C%20AUC--PR-yellow" />
+
+<img src="https://img.shields.io/badge/Stability-Data%20Efficiency%20Study-teal" />
+
+<a href="https://opensource.org/licenses/MIT">
+  <img src="https://img.shields.io/badge/License-MIT-green.svg" />
+</a>
+
+<img src="https://img.shields.io/github/stars/Vraj2712/lung-cancer-risk-ml-PLCO?style=social" />
+
+</p>
+
+
+
 ---
 
 ## 📌 Project Summary
 
-This project evaluates the **data efficiency, robustness, and stability** of a **Super-Stacking Ensemble** model for **lung cancer risk prediction** using **15 clinically interpretable variables** derived from the PLCO dataset.
+This project evaluates the **data efficiency, robustness, and stability** of a **Super-Stacking Ensemble** for **lung cancer risk prediction** using **15 clinically interpretable variables** from the **PLCO Cancer Screening Trial**.
 
-Rather than only reporting peak performance, this study answers a deeper question:
+Most ML projects report only peak performance. This study answers a deployment-critical question:
 
-> **How much training data does the model actually need to perform well?**
+> **How much training data does the model need to remain reliable?**
 
-To answer this, the model is trained on **progressively smaller fractions of the training data (100% → 10%)**, while keeping the **test set fixed**, allowing a clean and fair evaluation of generalization behavior.
+To test this, the model is trained on **progressively smaller fractions of the training set (100% → 10%)**, while keeping a **fixed, frozen test set** to ensure a fair and leakage-free comparison.
 
 ---
 
 ## 🧠 Model Architecture
 
-The model is a **Super-Stacking Ensemble** consisting of:
+A **Super-Stacking Ensemble** is used to combine diverse model families and improve generalization under class imbalance.
 
-**Base learners**
+### Base Learners
 
 * Logistic Regression
 * Random Forest
@@ -30,16 +62,16 @@ The model is a **Super-Stacking Ensemble** consisting of:
 * LightGBM
 * CatBoost
 
-**Meta-learner**
+### Meta-Learner
 
-* Logistic Regression (probability stacking)
+* Logistic Regression (**probability stacking**)
 
-**Key design choices**
+### Key Design Choices
 
-* Strong regularization across models
-* Class imbalance handled using `class_weight` and `scale_pos_weight`
-* Decision threshold **optimized on validation set only** (F1-maximization)
-* Test set remains **frozen throughout the experiment**
+* Strong regularization across learners (bias–variance control)
+* Class imbalance handled via `class_weight` and `scale_pos_weight`
+* Decision threshold **tuned only on validation set** (F1-maximization)
+* Test set remains **frozen across all experiments** (clean generalization evaluation)
 
 ---
 
@@ -55,17 +87,18 @@ The model is a **Super-Stacking Ensemble** consisting of:
 | Metrics            | AUC-ROC, AUC-PR, Recall, Precision, F1    |
 | Reporting          | Mean ± standard deviation                 |
 
-This design ensures:
+### Why this design is reliable
 
-* No data leakage
-* No optimistic bias
-* Reliable stability analysis
+* ✅ No data leakage
+* ✅ No optimistic bias from test-time tuning
+* ✅ Multi-seed results for stability and reproducibility
+* ✅ Measures both performance **and robustness** under reduced data
 
 ---
 
-## 📊 Main Results (Full Table)
+## 📊 Main Results
 
-**Test-set performance (mean ± std across 5 seeds)**
+**Frozen test-set performance (mean ± std across 5 seeds)**
 
 | Training Fraction | Runs | AUC-ROC         | AUC-PR          | Recall          | Precision       | F1              |
 | ----------------- | ---- | --------------- | --------------- | --------------- | --------------- | --------------- |
@@ -80,8 +113,9 @@ This design ensures:
 | 0.2               | 5    | 0.8331 ± 0.0010 | 0.1090 ± 0.0033 | 0.8757 ± 0.0103 | 0.0540 ± 0.0017 | 0.1018 ± 0.0029 |
 | 0.1               | 5    | 0.8311 ± 0.0035 | 0.1085 ± 0.0053 | 0.8808 ± 0.0092 | 0.0520 ± 0.0028 | 0.0982 ± 0.0049 |
 
----
+✅ **Key takeaway:** Even at **10% training data**, AUC-ROC drops by only ~**0.005**, showing strong data efficiency and robust ranking performance.
 
+---
 
 ## 📈 Visual Analysis & Interpretation
 
@@ -89,19 +123,17 @@ This design ensures:
 
 ![Data Efficiency: AUC-ROC and AUC-PR](figures/gh_dual_aucroc_aucpr.png)
 
-**What this plot shows**
-
-This figure illustrates how the model’s **ranking performance (AUC-ROC)** and **precision–recall performance (AUC-PR)** change as the training data is progressively reduced.
+**What this shows**
+How ranking quality (AUC-ROC) and rare-event performance (AUC-PR) change as training data decreases.
 
 **Key observations**
 
-* AUC-ROC remains **high and nearly flat** from 100% down to ~40% training data
-* Even at **10% training data**, performance drops only slightly
-* AUC-PR degrades smoothly, which is expected for highly imbalanced medical data
+* AUC-ROC stays **nearly flat** from 100% → ~40%
+* At **10% training data**, the drop is small and smooth
+* AUC-PR declines gradually (expected under extreme imbalance)
 
 **Interpretation**
-
-The model learns strong, generalizable patterns early and remains **highly data-efficient**, retaining reliable ranking ability even with limited data.
+The model learns strong generalizable patterns early, remaining **highly data-efficient**.
 
 ---
 
@@ -109,19 +141,17 @@ The model learns strong, generalizable patterns early and remains **highly data-
 
 ![Performance Degradation](figures/gh_drop_vs_full.png)
 
-**What this plot shows**
-
-This plot measures the **absolute performance drop** of each metric compared to training on the full dataset (100%).
+**What this shows**
+Absolute metric drop compared to 100% training.
 
 **Key observations**
 
-* AUC-ROC drops by only **~0.005** at 10% data
-* AUC-PR and F1 decline gradually, without sharp drops
-* Recall remains consistently high across most fractions
+* AUC-ROC drop ≈ **0.005** at 10%
+* F1 and AUC-PR decline smoothly without sudden collapse
+* Recall remains consistently high across fractions
 
 **Interpretation**
-
-Performance degradation is **slow and controlled**, indicating that the ensemble does not overfit and remains robust under data scarcity.
+Performance degradation is **controlled**, suggesting robustness rather than overfitting.
 
 ---
 
@@ -129,19 +159,17 @@ Performance degradation is **slow and controlled**, indicating that the ensemble
 
 ![Stability Across Seeds](figures/gh_stability_std.png)
 
-**What this plot shows**
-
-This figure displays the **standard deviation of metrics across 5 random seeds** for each training fraction.
+**What this shows**
+Standard deviation across 5 seeds at each training fraction.
 
 **Key observations**
 
-* Variance increases gradually as training data decreases
-* No instability, spikes, or metric collapse are observed
+* Variance increases gradually with less data (expected)
+* No instability spikes or collapse
 * AUC-ROC remains the most stable metric
 
 **Interpretation**
-
-The model produces **consistent and reliable results** across different random samples, demonstrating strong robustness and low sensitivity to data sampling.
+Results are **repeatable and consistent**, indicating low sensitivity to sampling variation.
 
 ---
 
@@ -149,38 +177,26 @@ The model produces **consistent and reliable results** across different random s
 
 ![Threshold Stability](figures/threshold_stability.png)
 
-**What this plot shows**
-
-This plot tracks the **optimal decision threshold** (chosen via validation F1 maximization) across different training fractions.
+**What this shows**
+Optimal validation-tuned threshold (F1-max) across training fractions.
 
 **Key observations**
 
-* Optimal threshold remains near **0.30** across all data sizes
-* Slightly higher variance at very low data fractions
-* No erratic threshold shifts
+* Threshold stays near **0.30** across data sizes
+* Slight variance increase at very low fractions
+* No erratic shifts in decision boundary
 
 **Interpretation**
-
-The decision boundary is **stable and well-calibrated**, providing strong evidence against overfitting and supporting reliable deployment behavior.
+The model’s decision behavior is **stable**, supporting reliable deployment settings.
 
 ---
 
-If you want, next I can:
-
-* **Trim this to fit a strict word limit**
-* **Highlight only the strongest plots for recruiters**
-* **Polish language for a research-style README**
-
-Just say the word 👍
-
-
 ## 🧠 Key Takeaways (Plain Language)
 
-* The model **does not rely on huge amounts of data** to perform well
-* Performance stays strong even with **90% less training data**
-* The ensemble learns **robust, general patterns**
-* Decision behavior (threshold) is **stable and predictable**
-* This is exactly what you want in a **real-world screening model**
+* The model remains strong even with **90% less training data**
+* Generalization is consistent across different random samples
+* Threshold behavior is stable (predictable decision boundary)
+* This is the kind of reliability needed for **real-world screening systems**
 
 ---
 
@@ -188,28 +204,57 @@ Just say the word 👍
 
 * Python
 * scikit-learn
-* XGBoost
-* LightGBM
-* CatBoost
+* XGBoost, LightGBM, CatBoost
 * pandas, NumPy
 * Matplotlib
 
 ---
 
-## 🚀 Why This Project Matters
+## 🚀 Why This Matters
 
-Most ML projects only report peak performance.
-This project goes further by answering:
+Healthcare data is often limited, imbalanced, and noisy.
+This project demonstrates a model that is not only accurate, but also:
 
-> *“How reliable is the model when data is limited?”*
-
-That question matters deeply in:
-
-* Healthcare
-* Screening systems
-* Real-world deployment
+✅ **data-efficient**
+✅ **stable**
+✅ **robust under scarcity**
+That combination is what makes ML deployable in the real world.
 
 ---
 
-If you want, next we can:
+## 👤 Author
+
+**Vraj Shaileshbhai Patel**
+MSCS — NJIT
+
+---
+
+## 🏛️ Data Access
+
+PLCO data available from:
+
+> [https://cdas.cancer.gov/plco/](https://cdas.cancer.gov/plco/)
+
+Use requires approval — therefore **not shared in this repo**.
+A **fake sample CSV** is included for demonstration only.
+
+---
+
+## 🛠️ Requirements
+
+Install Python libs:
+
+```
+pip install -r requirements.txt
+```
+
+---
+
+## 🙌 Acknowledgements
+
+* PLCO Cancer Screening Trial participants
+* NIH / NCI CDAS program
+* Advisors and faculty who guided methodology
+
+---
 
